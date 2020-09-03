@@ -10,7 +10,10 @@
   cd "$directory"
 
 # Gather contents of all the log files in current directory using cat
-
+  for FILE in /var/log/*
+  do
+    cat "$FILE" >> failed_login_data.txt
+  done 
 
 # Extract the appropriate columns from the relevant lines, piping them
 # to a command that removes the minutes and seconds from all the times
