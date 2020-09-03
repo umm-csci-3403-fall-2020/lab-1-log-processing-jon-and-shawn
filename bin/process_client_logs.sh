@@ -6,17 +6,12 @@
 # called failed_login_data.txt
 
   directory=$1
-  
-  cd "$directory"
 
 # Gather contents of all the log files in current directory using cat
-  for FILE in /var/log/*
-  do
-    cat "$FILE" >> failed_login_data.txt
-  done 
 
 # Extract the appropriate columns from the relevant lines, piping them
 # to a command that removes the minutes and seconds from all the times
 
 
 # Redirect the output to the file failed_login_data.txt
+cat "$directory"/var/log/* | awk '/Failed password/ {print $1,$2,$3,$9,$11,$13}' | sed -E 's/:\w+:\w+//' | sed -E 's/ invalid| [0-9]{4,5}//' > failed_login_data.txt
