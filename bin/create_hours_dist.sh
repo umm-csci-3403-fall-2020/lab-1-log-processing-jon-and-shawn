@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
-    directory=$1
+  directory=$1
 
-    here=$(pwd)
+  here=$(pwd)
 
-    cd "$directory" || exit
+  cd "$directory" || exit
 
+# Sort and then use awk to extract the third column of the file
+  sort -k 3 -- */failed_login_data.txt | awk '{print $3}' | 
 
+# Use uniq to count occurences of a specific hours and then use awk to print the hour and number of occurences accordingly
+  uniq -c | awk '{print "data.addRow([\x27" $2 "\x27, " $1 "]);"}' | sort |
 
-# Gather the contents of the failed_login_data.txt file and extract the hour columns.                               # Then count how many times each hour appears
-sort -k 3 -- */failed_login_data.txt | awk '{print $3}' | uniq -c | awk '{print "data.addRow([\x27" $2 "\x27, " $1 "]);"}' | sort > tempHours.txt
-
-"$here"/bin/wrap_contents.sh tempHours.txt "$here"/html_components/hours_dist hours_dist.html
+# Call wrap_contents.sh to wrap file passed in through the pipe and hour_dist footer and header
+# Finally to create file called hours_dist.html
+  "$here"/bin/wrap_contents.sh - "$here"/html_components/hours_dist hours_dist.html
